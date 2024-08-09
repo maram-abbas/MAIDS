@@ -1,0 +1,50 @@
+-- -----------------------------------------------------
+-- Schema LIBRARY
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `LIBRARY` DEFAULT CHARACTER SET utf8 ;
+USE `LIBRARY` ;
+
+-- -----------------------------------------------------
+-- Table `LIBRARY`.`BOOK`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LIBRARY`.`BOOK` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `TITLE` VARCHAR(250) NOT NULL,
+  `AUTHOR` VARCHAR(250) NOT NULL,
+  `PUBLICATION_YEAR` YEAR NOT NULL,
+  `ISBN` VARCHAR(13) NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE INDEX `ISBN_UQ` (`ISBN` ASC) VISIBLE);
+
+
+-- -----------------------------------------------------
+-- Table `LIBRARY`.`PATRON`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LIBRARY`.`PATRON` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `NAME` VARCHAR(250) NOT NULL,
+  `CONTACT_INFORMATION` VARCHAR(500) NOT NULL,
+  PRIMARY KEY (`ID`));
+
+-- -----------------------------------------------------
+-- Table `LIBRARY`.`BORROWING_RECORD`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LIBRARY`.`BORROWING_RECORD` (
+  `ID` BIGINT NOT NULL AUTO_INCREMENT,
+  `BOOK_ID` INT NOT NULL,
+  `PATRON_ID` INT NOT NULL,
+  `BORROWING_DATE` DATETIME NOT NULL,
+  `RETURN_DATE` DATETIME NULL,
+  PRIMARY KEY (`ID`),
+  INDEX `FK_BOOK_BORROWING_RECORD_idx` (`BOOK_ID` ASC) VISIBLE,
+  INDEX `FK_PATRON_BORROWING_RECORD_idx` (`PATRON_ID` ASC) VISIBLE,
+  CONSTRAINT `FK_BOOK_BORROWING_RECORD`
+    FOREIGN KEY (`BOOK_ID`)
+    REFERENCES `LIBRARY`.`BOOK` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK_PATRON_BORROWING_RECORD`
+    FOREIGN KEY (`PATRON_ID`)
+    REFERENCES `LIBRARY`.`PATRON` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
